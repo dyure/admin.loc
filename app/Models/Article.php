@@ -22,9 +22,14 @@ class Article extends Model
      * @var array
      */
     protected $fillable = [
+        'created_at',
         'NewsTitle',
+        'NewsLead',
         'NewsText',
         'NewsTopicID',
+        'NewsAuthorID',
+        'NewsAuthor',
+        'NewsPublisherID',
         'NewsPublic',
     ];
 

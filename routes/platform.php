@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 
 use App\Orchid\Screens\Article\ArticleListScreen;
+use App\Orchid\Screens\Article\ArticleEditScreen;
 use App\Orchid\Screens\AnalyticsAndReportsScreen;
 
 /*
@@ -41,7 +42,23 @@ Route::screen('/articles', ArticleListScreen::class)
     ->name('platform.articles')
     ->breadcrumbs(fn(Trail $trail) => $trail
             ->parent('platform.index')
-            ->push('Пресс-релизы')
+            ->push('Статьи', route('platform.articles'))
+    );
+
+// Articles edit
+Route::screen('/articles/{article}/edit', ArticleEditScreen::class)
+    ->name('platform.articles.edit')
+    ->breadcrumbs(fn (Trail $trail, $article) => $trail
+        ->parent('platform.articles')
+        ->push($article->NewsTitle)
+    );
+
+// Articles create
+Route::screen('/articles/create', ArticleEditScreen::class)
+    ->name('platform.articles.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.articles')
+        ->push('Создание пресс-релиза')
     );
 
 // Analytics and Reports

@@ -12,7 +12,7 @@ use Orchid\Screen\Fields\TextArea;
 
 use App\Models\Topic;
 
-class CreateOrUpdateArticle extends Rows
+class ArticleTitleLayout extends Rows
 {
     /**
      * Used to create the title of a group of form elements.
@@ -30,26 +30,17 @@ class CreateOrUpdateArticle extends Rows
     {
         //$isArticleExist = is_null($this->query->getContent('article')) === false;
         return [
-            Input::make('article.id')
-                ->type('hidden'),
+            // Input::make('article.id')
+            //     ->type('hidden'),
             Input::make('article.NewsTitle')
-                ->required()
                 ->title('Заголовок'),
-            Select::make('article.NewsTopicID')
-                ->fromQuery(Topic::where('TopicPublic', '=', 1), 'TopicName')
-                ->required()
-                ->title('Раздел'),
-            TextArea::make('article.NewsText')
-                //->toolbar(['text', 'color', 'header', 'list', 'format', 'media'])
-                ->rows(10)
+            TextArea::make('article.NewsLead')
+                ->toolbar(['text'])
+                ->rows(5)
+                ->title('Лид'),
+            Quill::make('article.NewsText')
+                ->toolbar(['text', 'color', 'header', 'list', 'format', 'media'])
                 ->title('Текст'),
-            Select::make('article.NewsPublic')
-                ->options([
-                    1  => 'Да',
-                    0  => 'Нет',
-                ])
-                ->required()
-                ->title('Публиковать?')
         ];
     }
 }

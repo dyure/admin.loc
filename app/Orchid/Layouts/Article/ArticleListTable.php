@@ -7,6 +7,7 @@ use App\Models\Topic;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 
@@ -36,7 +37,8 @@ class ArticleListTable extends Table
                 ->render(fn (Article $article) =>
                     Topic::where('id', '=', $article->NewsTopicID)->value('TopicName')
                 )
-                ->filter(TD::FILTER_NUMERIC),
+                //->filter(TD::FILTER_NUMERIC)
+                ->defaultHidden(),
             TD::make('NewsPublic', 'Опубликовано')
                 ->align(TD::ALIGN_CENTER)
                 ->render(fn (Article $article) =>
@@ -51,14 +53,17 @@ class ArticleListTable extends Table
                 ->icon('options-vertical')
                 ->align(TD::ALIGN_CENTER)
                 ->list([
-                    ModalToggle::make('Изменить')
-                        ->icon('pencil')
-                        ->modal('editArticle')
-                        ->method('createOrUpdateArticle')
-                        ->modalTitle('Редактирование: ' . $article->NewsTitle)
-                        ->asyncParameters([
-                            'article' => $article->id
-                        ]),
+                    Link::make('Изменить')
+                    ->icon('pencil')
+                    ->route('platform.articles.edit', $article->id),
+                    // ModalToggle::make('Изменить')
+                    //     ->icon('pencil')
+                    //     ->modal('editArticle')
+                    //     ->method('createOrUpdateArticle')
+                    //     ->modalTitle('Редактирование: ' . $article->NewsTitle)
+                    //     ->asyncParameters([
+                    //         'article' => $article->id
+                    //     ]),
                     Button::make('Копировать')
                         ->icon('paste')
                         ->method('copyArticle', [

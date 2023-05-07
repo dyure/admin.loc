@@ -29,25 +29,34 @@ class AnalyticsAndReportsScreen extends Screen
                 ])
                 ->orWhere('NewsTopicID', '=', 130)
                 ->orWhere('NewsTopicID', '=', 218)
+                ->orWhere('NewsTopicID', '=', 324)
                 //->whereYear('created_at', '2023')
                 ->countForGroup('NewsTopicID')
                 ->toChart(fn () =>
                     [
                         1 => 'Пресс-релизы',
                         218 => 'Депутаты',
-                        130 => 'Фракции'
+                        130 => 'Фракции',
+                        324 => 'Поздравления'
                     ]
                 ),
             'lineArticles' => [
                 Article::where('NewsTopicID', '=', 1)
-                    ->countByDays($start, $end, 'created_at')
+                    //->countByDays($start, $end, 'created_at')
+                    ->countByDays(NULL, NULL, 'created_at')
                     ->toChart('Пресс-релизы'),
                 Article::where('NewsTopicID', '=', 218)
-                    ->countByDays($start, $end, 'created_at')
+                    //->countByDays($start, $end, 'created_at')
+                    ->countByDays(NULL, NULL, 'created_at')
                     ->toChart('Депутаты'),
                 Article::where('NewsTopicID', '=', 130)
-                    ->countByDays($start, $end, 'created_at')
-                    ->toChart('Фракции')
+                    //->countByDays($start, $end, 'created_at')
+                    ->countByDays(NULL, NULL, 'created_at')
+                    ->toChart('Фракции'),
+                Article::where('NewsTopicID', '=', 324)
+                    //->countByDays($start, $end, 'created_at')
+                    ->countByDays(NULL, NULL, 'created_at')
+                    ->toChart('Поздравления')
             ]
         ];
     }

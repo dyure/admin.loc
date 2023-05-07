@@ -11,6 +11,7 @@ use Orchid\Screen\Layouts\Modal;
 use Orchid\Screen\Actions\ModalToggle;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\Select;
@@ -21,7 +22,9 @@ use Orchid\Support\Facades\Alert;
 use App\Models\Article;
 use App\Models\Topic;
 use App\Orchid\Layouts\Article\ArticleListTable;
-use App\Orchid\Layouts\Article\CreateOrUpdateArticle;
+use App\Orchid\Layouts\OperatorSelection;
+use App\Orchid\Filters\TopicFilter;
+//use App\Orchid\Layouts\Article\CreateOrUpdateArticle;
 // use App\Orchid\Screens\AsSource;
 
 class ArticleListScreen extends Screen
@@ -35,11 +38,11 @@ class ArticleListScreen extends Screen
     {
         //dd($this->query->getContent());
         return [
-            'articles' => Article::filters()
-                ->where('NewsTopicID', '=', 1)
-                ->orWhere('NewsTopicID', '=', 218)
-                ->orWhere('NewsTopicID', '=', 130)
-                ->orWhere('NewsTopicID', '=', 324)
+            'articles' => Article::filtersApply([TopicFilter::class])->filters()
+                // ->where('NewsTopicID', '=', 1)
+                // ->orWhere('NewsTopicID', '=', 218)
+                // ->orWhere('NewsTopicID', '=', 130)
+                // ->orWhere('NewsTopicID', '=', 324)
                 ->defaultSort('created_at', 'desc')
                 ->paginate(10),
         ];
@@ -52,7 +55,7 @@ class ArticleListScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Пресс-релизы';
+        return 'Статьи';
     }
 
     /**
@@ -63,9 +66,8 @@ class ArticleListScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-            ModalToggle::make('Новая статья')
-                ->modal('createArticle')
-                ->method('createOrUpdateArticle'),
+            Link::make('Новая статья')
+                ->route('platform.articles.create')
         ];
     }
 
@@ -77,15 +79,8 @@ class ArticleListScreen extends Screen
     public function layout(): array
     {
         return [
-            ArticleListTable::class,
-            Layout::modal('createArticle', CreateOrUpdateArticle::class)
-                ->title('Новая статья')
-                ->size(Modal::SIZE_LG)
-                ->applyButton('Создать'),
-            Layout::modal('editArticle', CreateOrUpdateArticle::class)
-                ->title('Редактирование статьи')
-                ->size(Modal::SIZE_LG)
-                ->async('asyncGetArticle')
+            OperatorSelection::class,
+            ArticleListTable::class
         ];
     }
 
@@ -94,17 +89,6 @@ class ArticleListScreen extends Screen
         return [
             'article' => $article
         ];
-    }
-
-    public function createOrUpdateArticle(ArticleRequest $request): void
-    {
-        $articleId = $request->input('article.id');
-        //dd($request->all());
-        Article::updateOrCreate([
-            'id' => $articleId
-        ], array_merge($request->validated()['article'], []));
-
-        is_null($articleId) ? Toast::info('Статья создана') : Toast::info('Статья обновлена');
     }
 
     public function yesNo(Request $request): void

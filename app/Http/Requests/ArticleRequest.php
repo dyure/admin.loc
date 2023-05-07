@@ -24,10 +24,15 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
-            'article.NewsTitle' => ['required'],
-            'article.NewsTopicID' => ['required'],
+            'article.NewsTitle' => [],
+            'article.NewsLead' => [],
+            'article.created_at' => [],
+            'article.NewsTopicID' => [],
+            'article.NewsAuthorID' => [],
+            'article.NewsPublisherID' => [],
+            'article.NewsAuthor' => [],
             'article.NewsText' => [],
-            'article.NewsPublic' => ['required']
+            'article.NewsPublic' => []
         ];
     }
 }
